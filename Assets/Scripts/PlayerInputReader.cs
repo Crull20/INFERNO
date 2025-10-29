@@ -9,22 +9,26 @@ public class PlayerInputReader : MonoBehaviour
     public UnityEvent OnAttack;
     public UnityEvent OnDash;
 
+    // input actions
     [SerializeField] private InputActionReference movement;
     [SerializeField] private InputActionReference attack;
     [SerializeField] private InputActionReference pointerPosition;
     [SerializeField] private InputActionReference dash;
 
+    // convert screen pointer to world space
     [SerializeField] private Camera worldCamera;
     [SerializeField] private Transform pointerDepthTarget; // usually the Agent transform
 
     private void Awake()
     {
+        // fallbacks if not set in inspector
         if (worldCamera == null) worldCamera = Camera.main;
         if (pointerDepthTarget == null) pointerDepthTarget = transform;
     }
 
     private void OnEnable()
     {
+        // enable actions 
         movement?.action?.Enable();
         pointerPosition?.action?.Enable();
         attack?.action?.Enable();
@@ -69,13 +73,16 @@ public class PlayerInputReader : MonoBehaviour
         }
     }
 
+    // action callback
     private void OnAttackPerformed(InputAction.CallbackContext ctx) => OnAttack?.Invoke();
+    // dash action callback -> broadcast dash
     private void OnDashPerformed(InputAction.CallbackContext ctx)
     {
 
         OnDash?.Invoke();
     }
 
+    // read pointer position in screen space
     private Vector2? ReadPointerScreen()
     {
         if (pointerPosition != null && pointerPosition.action != null && pointerPosition.action.enabled)
