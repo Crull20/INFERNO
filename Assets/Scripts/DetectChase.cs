@@ -3,18 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class SimpleDetectChase : MonoBehaviour
 {
-    [Header("Target")]
-    [SerializeField] private Transform target;          // drag Player here, or leave null to find by tag
+    [SerializeField] private Transform target;          
     [SerializeField] private string targetTag = "Player";
 
-    [Header("Behavior")]
     [SerializeField] private float detectionRadius = 6f;
     [SerializeField] private float stopDistance = 0.35f;
     [SerializeField] private float moveSpeed = 2.5f;
 
-    [Header("Visuals")]
-    [SerializeField] private SpriteRenderer sprite;     // drag your Skeleton SpriteRenderer
-    [SerializeField] private Animator animator;         // drag your Animator (on Skeleton)
+    [SerializeField] private SpriteRenderer sprite;    
+    [SerializeField] private Animator animator;        
 
     private const float FaceThreshold = 0.01f;
     private Rigidbody2D rb;
@@ -34,8 +31,8 @@ public class SimpleDetectChase : MonoBehaviour
         if (!target)
         {
             var go = GameObject.FindGameObjectWithTag(targetTag);
-            if (go) target = go.transform;
-            else Debug.LogWarning($"{name}: No object tagged '{targetTag}' found. Enemy will idle.");
+            if (go) 
+                target = go.transform;
         }
     }
 
@@ -50,7 +47,7 @@ public class SimpleDetectChase : MonoBehaviour
             Vector2 toTarget = targetPos - myPos;
             float dist = toTarget.magnitude;
 
-            // Face towards the player for visuals
+
             if (sprite && Mathf.Abs(toTarget.x) > FaceThreshold)
                 sprite.flipX = (toTarget.x < 0f);
 

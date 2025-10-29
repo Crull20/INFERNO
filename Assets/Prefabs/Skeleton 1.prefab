@@ -45,12 +45,12 @@ GameObject:
   - component: {fileID: 1780666649627841412}
   - component: {fileID: 8689467616245849476}
   - component: {fileID: 3499329309633087250}
-  - component: {fileID: 5015644842893932387}
   - component: {fileID: 3241934461869415213}
   - component: {fileID: 7810951703876140208}
   - component: {fileID: -9221765398067084839}
   - component: {fileID: 7334662922152794193}
   - component: {fileID: 713065699377143633}
+  - component: {fileID: -8065854093655614955}
   m_Layer: 0
   m_Name: Skeleton 1
   m_TagString: Untagged
@@ -209,7 +209,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isDead: 0
-  destroyDelayOnDeath: 0.3
 --- !u!114 &3499329309633087250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,29 +225,9 @@ MonoBehaviour:
   targetTag: Player
   detectionRadius: 4
   stopDistance: 0.35
-  moveSpeed: 3
+  moveSpeed: 4.5
   sprite: {fileID: 6655820944056528373}
   animator: {fileID: 3241934461869415213}
---- !u!114 &5015644842893932387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5525285955941578362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92f16c0e3840ab944b94d30f2411b442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  damageInterval: 10
-  targetTag: Player
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  animator: {fileID: 3241934461869415213}
-  attackTriggerName: Attack
 --- !u!95 &3241934461869415213
 Animator:
   serializedVersion: 5
@@ -447,4 +426,21 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c4c255a3034bdbb47889784bc2381063, type: 3}
   deathClips:
   - {fileID: 8300000, guid: bacd2f570fd74e540808c58068ba097a, type: 3}
-  pitchJitter: {x: 0.96, y: 1.04}
+--- !u!114 &-8065854093655614955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5525285955941578362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665d58d96b188364ab9ec6154b6e4ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  targetTag: Player
+  attackRange: 1.2
+  attackCooldown: 1
+  animator: {fileID: 3241934461869415213}
+  attackTriggerName: Attack

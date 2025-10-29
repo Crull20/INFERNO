@@ -2,41 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DisallowMultipleComponent]
 public class DamageFlash : MonoBehaviour
 {
-    [Header("What to tint")]
-    [Tooltip("Leave empty to search on this object. Assign VisualRoot to only tint visuals.")]
+    // holds sprites to tint
     [SerializeField] private Transform spritesRoot;
 
-    [Header("Flash Settings")]
+    // flash look/timing
     [SerializeField] private Color flashColor = new Color(1f, 0f, 0f, 1f);
-    [SerializeField] private float flashDuration = 0.12f;   // seconds
-    [SerializeField]
-    private AnimationCurve fadeCurve =
-        AnimationCurve.EaseInOut(0, 1, 1, 0); // 1 -> 0 over duration
+    // flash length
+    [SerializeField] private float flashDuration = 0.20f;
+    // intensity over time
+    [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0); 
 
-    [Header("Auto-hook to Health")]
+    // trigger from Health event
     [SerializeField] private bool flashOnHit = true;
     [SerializeField] private bool flashOnDeath = true;
 
+    // caching the sprite renders and original colors
     private readonly List<SpriteRenderer> _sprites = new();
     private readonly List<Color> _originalColors = new();
-    private Coroutine _flashCo;
+
+    // Coroutine handle and health reference
+    private Coroutine _flash;
     private Health _health;
 
     private void Awake()
     {
-        // Collect SpriteRenderers (on spritesRoot or on this object + children)
         Transform root = spritesRoot ? spritesRoot : transform;
         root.GetComponentsInChildren(true, _sprites);
 
-        if (_sprites.Count == 0)
-            Debug.LogWarning($"{name}: DamageFlash found no SpriteRenderers to tint.");
-
+        // cache original colors to restore after flash finishes
         _originalColors.Clear();
         foreach (var sr in _sprites) _originalColors.Add(sr.color);
 
+        // find health component for flash on hit/death
         _health = GetComponent<Health>();
     }
 
@@ -58,13 +57,15 @@ public class DamageFlash : MonoBehaviour
         }
     }
 
+    // Health event to start flash
     private void OnHitEvent(GameObject _sender) => Flash();
 
     /// <summary>Call this to start a flash (you can also call from an Animation Event).</summary>
     public void Flash()
     {
-        if (_flashCo != null) StopCoroutine(_flashCo);
-        _flashCo = StartCoroutine(FlashRoutine());
+        // restart red flash if one is running
+        if (_flash != null) StopCoroutine(_flash);
+        _flash = StartCoroutine(FlashRoutine());
     }
 
     private IEnumerator FlashRoutine()
@@ -77,8 +78,9 @@ public class DamageFlash : MonoBehaviour
 
         while (t < flashDuration)
         {
+            // use fadecurv to lerp from flashColor to original
             float k = Mathf.Clamp01(t / flashDuration);
-            float w = fadeCurve.Evaluate(k); // 1->0 over time
+            float w = fadeCurve.Evaluate(k); 
 
             for (int i = 0; i < _sprites.Count; i++)
             {
@@ -94,6 +96,6 @@ public class DamageFlash : MonoBehaviour
         for (int i = 0; i < _sprites.Count; i++)
             if (_sprites[i]) _sprites[i].color = _originalColors[i];
 
-        _flashCo = null;
+        _flash = null;
     }
 }

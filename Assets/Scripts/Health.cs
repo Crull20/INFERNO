@@ -11,8 +11,6 @@ public class Health : MonoBehaviour
     [SerializeField]
     public bool isDead = false;
 
-    [SerializeField] private float destroyDelayOnDeath = 0f;
-
     public void InitializeHealth(int healthValue)
     {
         currentHealth = healthValue;
@@ -39,11 +37,7 @@ public class Health : MonoBehaviour
         {
             OnDeathWithReference?.Invoke(sender);
             isDead = true;
-
-            if (destroyDelayOnDeath > 0f)
-                Destroy(gameObject, destroyDelayOnDeath);
-            else
-                Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 }

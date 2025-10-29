@@ -1,35 +1,46 @@
 using UnityEngine;
 
-public class SimpleAttackTrigger : MonoBehaviour
+public class AttackTrigger : MonoBehaviour
 {
+    // target to attack
     [SerializeField] private Transform target;
+    // auto find the target "Player" using tag
     [SerializeField] private string targetTag = "Player";
-    [SerializeField] private float attackRange = 1.1f;
-    [SerializeField] private float attackCooldown = 0.6f;
+    // range for attack trigger
+    [SerializeField] private float attackRange = 1.2f;
+    // time between attacks
+    [SerializeField] private float attackCooldown = 1f;
+    // attack animation
     [SerializeField] private Animator animator;
+    // trigger parameter 4 animator
     [SerializeField] private string attackTriggerName = "Attack";
 
-    private float _nextReady;
-
+    private float nextAttack;
     private void Start()
     {
+        // finds target by tag if nothing assigned
         if (!target)
         {
             var go = GameObject.FindGameObjectWithTag(targetTag);
             if (go) target = go.transform;
         }
-        if (!animator) animator = GetComponentInChildren<Animator>();
-    }
+        if (!animator)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
 
+    }
     private void Update()
     {
-        if (!target || Time.time < _nextReady) return;
+        // if no target found, do nothing
+        if (!target || Time.time < nextAttack) return;
 
+        // if target is inside range, fire attack animation
         float dist = Vector2.Distance(transform.position, target.position);
         if (dist <= attackRange)
         {
             animator?.SetTrigger(attackTriggerName);
-            _nextReady = Time.time + attackCooldown; // prevents retrigger spam
+            nextAttack = Time.time + attackCooldown; // prevents spam
         }
     }
 }

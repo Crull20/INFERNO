@@ -2,20 +2,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-[DefaultExecutionOrder(-50)] // run before most game logic
 public class PlayerInputReader : MonoBehaviour
 {
-    [Header("Events pushed to the Agent")]
     public UnityEvent<Vector2> OnMovementInput;
     public UnityEvent<Vector2> OnPointerInput;
     public UnityEvent OnAttack;
+    public UnityEvent OnDash;
 
-    [Header("Input Actions (New Input System)")]
     [SerializeField] private InputActionReference movement;
     [SerializeField] private InputActionReference attack;
     [SerializeField] private InputActionReference pointerPosition;
+    [SerializeField] private InputActionReference dash;
 
-    [Header("Pointer conversion to world space")]
     [SerializeField] private Camera worldCamera;
     [SerializeField] private Transform pointerDepthTarget; // usually the Agent transform
 
@@ -30,9 +28,12 @@ public class PlayerInputReader : MonoBehaviour
         movement?.action?.Enable();
         pointerPosition?.action?.Enable();
         attack?.action?.Enable();
+        dash?.action?.Enable();
 
         if (attack != null && attack.action != null)
             attack.action.performed += OnAttackPerformed;
+        if (dash != null && dash.action != null)
+            dash.action.performed += OnDashPerformed;
     }
 
     private void OnDisable()
@@ -40,9 +41,13 @@ public class PlayerInputReader : MonoBehaviour
         if (attack != null && attack.action != null)
             attack.action.performed -= OnAttackPerformed;
 
+        if (dash != null && dash.action != null)
+            dash.action.performed -= OnDashPerformed;
+
         movement?.action?.Disable();
         pointerPosition?.action?.Disable();
         attack?.action?.Disable();
+        dash?.action?.Disable();
     }
 
     private void Update()
@@ -65,6 +70,11 @@ public class PlayerInputReader : MonoBehaviour
     }
 
     private void OnAttackPerformed(InputAction.CallbackContext ctx) => OnAttack?.Invoke();
+    private void OnDashPerformed(InputAction.CallbackContext ctx)
+    {
+
+        OnDash?.Invoke();
+    }
 
     private Vector2? ReadPointerScreen()
     {

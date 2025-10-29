@@ -7,7 +7,6 @@ public class HealthSoundEffect : MonoBehaviour
     [SerializeField] private AudioSource source;          // assign a 2D SFX source
     [SerializeField] private AudioClip[] hurtClips;
     [SerializeField] private AudioClip[] deathClips;
-    [SerializeField] private Vector2 pitchJitter = new(0.96f, 1.04f);
 
     private Health health;
 
@@ -33,7 +32,6 @@ public class HealthSoundEffect : MonoBehaviour
     {
         if (!source || bank == null || bank.Length == 0) return;
         var clip = bank[Random.Range(0, bank.Length)];
-        source.pitch = Random.Range(pitchJitter.x, pitchJitter.y);
         source.PlayOneShot(clip);
     }
 }
